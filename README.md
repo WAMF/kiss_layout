@@ -1,0 +1,266 @@
+# kiss_layout
+
+A Flutter package that helps you create consistent UI layouts using a T-Shirt size system (S, M, L). Developed by [First Mobile Digital Group SL](https://www.wearemobilefirst.com).
+
+## Features
+
+- 🎯 **Simple T-Shirt Sizing System** - Use small, medium, and large sizes for consistent spacing
+- 🎨 **Flexible Layout System** - Easily manage padding, gaps, and corner radii
+- 🌍 **Global Layout Configuration** - Set layout rules at the app level
+- 🔄 **Override Capabilities** - Customize layout for specific sections
+- 📱 **Responsive Design** - Handle different screen sizes with ease
+- 🏗️ **KISS Principle** - Keep It Simple, Stupid! Clean and maintainable code
+- 🔥 **Reduces Flutter widget parameter hell** - Gets rid of parameters and literals all over the place
+
+## Getting Started
+
+Add this to your package's `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  kiss_layout: ^1.0.0
+```
+
+## Usage
+
+### Basic Setup
+
+Wrap your app with the `Layout` widget to provide global layout settings:
+
+```dart
+void main() {
+  runApp(
+    Layout(
+      child: MaterialApp(
+        home: MyHomePage(),
+      ),
+    ),
+  );
+}
+```
+
+### Using Spacing
+
+The package provides pre-built gap widgets for consistent spacing:
+
+```dart
+Column(
+  children: [
+    Text('Header'),
+    const GapLarge(), // Large spacing
+    Text('Content'),
+    const GapMedium(), // Medium spacing
+    Text('Footer'),
+    const GapSmall(), // Small spacing
+  ],
+)
+```
+
+### Padding
+
+Use the built-in padding widgets for consistent edge spacing:
+
+```dart
+PaddingOuterMedium(
+  child: Card(
+    child: PaddingInnerSmall(
+      child: Text('Content'),
+    ),
+  ),
+)
+```
+
+### More complex example
+
+```dart
+// Example of using Layout settings in a custom widget
+class CustomCard extends StatelessWidget {
+  const CustomCard({
+    super.key,
+    required this.title,
+    required this.content,
+  });
+
+  final String title;
+  final String content;
+
+  @override
+  Widget build(BuildContext context) {
+    // Get the current Layout settings
+    final layout = Layout.of(context);
+    
+    return Container(
+      // Use corner radius from layout
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(layout.cornerRadii.medium),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
+      ),
+      // Use edge spacing from layout
+      padding: layout.edgeSpacing.inner.medium,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          // Use item spacing from layout
+          Gap(layout.itemSpacing.medium),
+          Text(content),
+          Gap(layout.itemSpacing.large),
+          // Use action sizes from layout
+          SizedBox(
+            width: layout.actionSizes.medium.width,
+            height: layout.actionSizes.medium.height,
+            child: ElevatedButton(
+              onPressed: () {},
+              child: const Text('Action'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+### Custom Layout Settings
+
+### Direct Configuration
+
+You can customize the layout settings directly:
+
+```dart
+Layout(
+  itemSpacing: const LayoutItemGaps(
+    large: 24.0,
+    medium: 16.0,
+    small: 8.0,
+  ),
+  edgeSpacing: const LayoutEdgeSpacing(
+    outer: LayoutEdgeSpacingSizes(
+      large: EdgeInsets.all(24),
+      medium: EdgeInsets.all(16),
+      small: EdgeInsets.all(8),
+    ),
+  ),
+  child: YourWidget(),
+)
+```
+
+### Predefined Layout Styles
+
+You can create custom Layout subclasses for consistent styling across your app:
+
+```dart
+// Compact layout with tighter spacing and smaller components
+class CompactLayout extends Layout {
+  const CompactLayout({
+    required super.child,
+    super.key,
+  }) : super(
+          itemSpacing: const LayoutItemGaps(
+            large: 16.0,
+            medium: 8.0,
+            small: 4.0,
+          ),
+          edgeSpacing: const LayoutEdgeSpacing(
+            outer: LayoutEdgeSpacingSizes(
+              large: EdgeInsets.all(16),
+              medium: EdgeInsets.all(12),
+              small: EdgeInsets.all(8),
+            ),
+            inner: LayoutEdgeSpacingSizes(
+              large: EdgeInsets.all(12),
+              medium: EdgeInsets.all(8),
+              small: EdgeInsets.all(4),
+            ),
+          ),
+          // ... other custom settings
+        );
+}
+
+// Spacious layout with generous spacing and larger components
+class SpaciousLayout extends Layout {
+  const SpaciousLayout({
+    required super.child,
+    super.key,
+  }) : super(
+          itemSpacing: const LayoutItemGaps(
+            large: 32.0,
+            medium: 24.0,
+            small: 16.0,
+          ),
+          edgeSpacing: const LayoutEdgeSpacing(
+            outer: LayoutEdgeSpacingSizes(
+              large: EdgeInsets.all(32),
+              medium: EdgeInsets.all(24),
+              small: EdgeInsets.all(16),
+            ),
+            // ... other custom settings
+          ),
+        );
+}
+
+// Usage example
+void main() {
+  runApp(
+    CompactLayout(
+      child: MaterialApp(
+        home: MyCompactPage(),
+      ),
+    ),
+  );
+}
+```
+
+## Additional Features
+
+- Edge spacing (outer and inner)
+- Action sizes for buttons and interactive elements
+- Corner radii for consistent rounding
+- Hero sizes for featured elements
+- Modal bottom sheet configurations
+- Screen size breakpoints
+
+## I need more sizes that S M L !!!
+ - If you need more than these sizes on a single screen reconsider design or your composition of widgets.
+ - Maybe a section of you app is more compact or more spacious, in this case wrap that section with a new set of S M L sizes.
+ - If you really need more than 3 sizes, please open an issue and we will will consider adding more sizes.
+
+## Contributing
+
+We welcome contributions! Please feel free to submit a Pull Request.
+
+## License
+
+```
+MIT License
+
+Copyright (c) 2024 First Mobile Digital Group SL
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

@@ -230,7 +230,7 @@ void main() {
 - Modal bottom sheet configurations
 - Screen size breakpoints
 
-## I need more sizes that S M L !!!
+## I need more sizes than S M L !!!
  - If you need more than these sizes on a single screen reconsider design or your composition of widgets.
  - Maybe a section of you app is more compact or more spacious, in this case wrap that section with a new set of S M L sizes.
  - If you really need more than 3 sizes, please open an issue and we will will consider adding more sizes.

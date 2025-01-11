@@ -1,7 +1,7 @@
 name: kiss_layout
 description: "A simple system for standardizing layout in flutter"
-version: 1.0.0
-homepage: https://www.wearemobilefirst.com
+version: 1.0.1
+homepage: https://github.com/WAMF/kiss_layout
 
 environment:
   sdk: ^3.6.0

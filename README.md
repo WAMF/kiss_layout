@@ -235,6 +235,10 @@ void main() {
  - Maybe a section of you app is more compact or more spacious, in this case wrap that section with a new set of S M L sizes.
  - If you really need more than 3 sizes, please open an issue and we will will consider adding more sizes.
 
+## Guidelines
+
+ - see [GUIDE.md](./GUIDE.md)
+
 ## Contributing
 
 We welcome contributions! Please feel free to submit a Pull Request.

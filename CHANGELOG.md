@@ -1,3 +1,10 @@
+## 1.2.0
+
+- **BREAKING**: Refactored Layout widget to use a single `LayoutData` parameter instead of individual properties
+  - All layout configuration is now encapsulated in the `LayoutData` class
+  - Added predefined layouts: `LayoutData.standard`, `LayoutData.compact`, and `LayoutData.spacious`
+  - Existing code using individual properties will need to be updated to use `LayoutData`
+
 ## 1.1.0
 
 ### Added
@@ -5,6 +12,7 @@
 - Pre-built icon widgets: `IconLarge`, `IconMedium`, and `IconSmall` for easy access to consistent icon sizes
 
 ### Changed
+
 - Fixed all linter warnings by disabling `public_member_api_docs` rule
 - Applied dart fix to remove redundant argument values
 - Converted unnecessary double literals to integers

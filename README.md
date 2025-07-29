@@ -14,11 +14,8 @@ A Flutter package that helps you create consistent UI layouts using a T-Shirt si
 
 ## Getting Started
 
-Add this to your package's `pubspec.yaml` file:
-
-```yaml
-dependencies:
-  kiss_layout: ^1.1.0
+```bash
+dart pub add kiss_layout
 ```
 
 ## Usage
@@ -30,7 +27,22 @@ Wrap your app with the `Layout` widget to provide global layout settings:
 ```dart
 void main() {
   runApp(
+    Layout(  // Uses LayoutData.standard by default
+      child: MaterialApp(
+        home: MyHomePage(),
+      ),
+    ),
+  );
+}
+```
+
+Or use one of the predefined layouts:
+
+```dart
+void main() {
+  runApp(
     Layout(
+      data: LayoutData.compact,  // or LayoutData.spacious
       child: MaterialApp(
         home: MyHomePage(),
       ),
@@ -178,20 +190,29 @@ class CustomCard extends StatelessWidget {
 
 ### Direct Configuration
 
-You can customize the layout settings directly:
+You can customize the layout settings using LayoutData:
 
 ```dart
+// Use predefined layouts
 Layout(
-  itemSpacing: const LayoutItemGaps(
-    large: 24.0,
-    medium: 16.0,
-    small: 8.0,
-  ),
-  edgeSpacing: const LayoutEdgeSpacing(
-    outer: LayoutEdgeSpacingSizes(
-      large: EdgeInsets.all(24),
-      medium: EdgeInsets.all(16),
-      small: EdgeInsets.all(8),
+  data: LayoutData.compact,
+  child: YourWidget(),
+)
+
+// Or create custom layout data
+Layout(
+  data: const LayoutData(
+    itemSpacing: LayoutItemGaps(
+      large: 24.0,
+      medium: 16.0,
+      small: 8.0,
+    ),
+    edgeSpacing: LayoutEdgeSpacing(
+      outer: LayoutEdgeSpacingSizes(
+        large: EdgeInsets.all(24),
+        medium: EdgeInsets.all(16),
+        small: EdgeInsets.all(8),
+      ),
     ),
   ),
   child: YourWidget(),
@@ -200,68 +221,43 @@ Layout(
 
 ### Predefined Layout Styles
 
-You can create custom Layout subclasses for consistent styling across your app:
+The package includes built-in layout styles that you can use directly:
 
 ```dart
-// Compact layout with tighter spacing and smaller components
-class CompactLayout extends Layout {
-  const CompactLayout({
-    required super.child,
-    super.key,
-  }) : super(
-          itemSpacing: const LayoutItemGaps(
-            large: 16.0,
-            medium: 8.0,
-            small: 4.0,
-          ),
-          edgeSpacing: const LayoutEdgeSpacing(
-            outer: LayoutEdgeSpacingSizes(
-              large: EdgeInsets.all(16),
-              medium: EdgeInsets.all(12),
-              small: EdgeInsets.all(8),
-            ),
-            inner: LayoutEdgeSpacingSizes(
-              large: EdgeInsets.all(12),
-              medium: EdgeInsets.all(8),
-              small: EdgeInsets.all(4),
-            ),
-          ),
-          // ... other custom settings
-        );
-}
+// Standard layout (default)
+Layout(
+  data: LayoutData.standard,
+  child: MyWidget(),
+)
 
-// Spacious layout with generous spacing and larger components
-class SpaciousLayout extends Layout {
-  const SpaciousLayout({
-    required super.child,
-    super.key,
-  }) : super(
-          itemSpacing: const LayoutItemGaps(
-            large: 32.0,
-            medium: 24.0,
-            small: 16.0,
-          ),
-          edgeSpacing: const LayoutEdgeSpacing(
-            outer: LayoutEdgeSpacingSizes(
-              large: EdgeInsets.all(32),
-              medium: EdgeInsets.all(24),
-              small: EdgeInsets.all(16),
-            ),
-            // ... other custom settings
-          ),
-        );
-}
+// Compact layout with tighter spacing
+Layout(
+  data: LayoutData.compact,
+  child: MyWidget(),
+)
 
-// Usage example
-void main() {
-  runApp(
-    CompactLayout(
-      child: MaterialApp(
-        home: MyCompactPage(),
-      ),
-    ),
-  );
-}
+// Spacious layout with generous spacing
+Layout(
+  data: LayoutData.spacious,
+  child: MyWidget(),
+)
+```
+
+You can also use the convenience widgets:
+
+```dart
+// These widgets automatically apply their respective LayoutData
+CompactLayout(
+  child: MaterialApp(
+    home: MyCompactPage(),
+  ),
+)
+
+SpaciousLayout(
+  child: MaterialApp(
+    home: MySpaciousPage(),
+  ),
+)
 ```
 
 ## Additional Features

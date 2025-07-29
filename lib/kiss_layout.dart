@@ -148,9 +148,8 @@ class LayoutScreenSizes {
   final double minLanscapeTableWidth;
 }
 
-class Layout extends InheritedWidget {
-  const Layout({
-    required super.child,
+class LayoutData {
+  const LayoutData({
     this.itemSpacing = const LayoutItemGaps(),
     this.edgeSpacing = const LayoutEdgeSpacing(),
     this.actionSizes = const LayoutActionSizes(),
@@ -159,8 +158,8 @@ class Layout extends InheritedWidget {
     this.iconSizes = const LayoutIconSizes(),
     this.modalBottomSheetHeightPercentage = 0.8,
     this.screenSizes = const LayoutScreenSizes(),
-    super.key,
   });
+
   final LayoutItemGaps itemSpacing;
   final LayoutEdgeSpacing edgeSpacing;
   final LayoutCornerRadii cornerRadii;
@@ -169,6 +168,98 @@ class Layout extends InheritedWidget {
   final LayoutScreenSizes screenSizes;
   final LayoutIconSizes iconSizes;
   final LayoutActionSizes actionSizes;
+
+  static const LayoutData standard = LayoutData();
+
+  static const LayoutData compact = LayoutData(
+    itemSpacing: LayoutItemGaps(
+      large: 16,
+    ),
+    edgeSpacing: LayoutEdgeSpacing(
+      outer: LayoutEdgeSpacingSizes(
+        large: EdgeInsets.all(16),
+      ),
+      inner: LayoutEdgeSpacingSizes(
+        large: EdgeInsets.all(12),
+        medium: EdgeInsets.all(8),
+        small: EdgeInsets.all(4),
+      ),
+    ),
+    cornerRadii: LayoutCornerRadii(
+      large: 12,
+    ),
+    actionSizes: LayoutActionSizes(
+      large: Size(180, 40),
+      medium: Size(90, 40),
+      small: Size(40, 40),
+    ),
+    heroSizes: LayoutHeroSizes(
+      large: Size(200, 200),
+      medium: Size(120, 120),
+      small: Size(48, 48),
+    ),
+  );
+
+  static const LayoutData spacious = LayoutData(
+    itemSpacing: LayoutItemGaps(
+      large: 32,
+      medium: 24,
+      small: 16,
+    ),
+    edgeSpacing: LayoutEdgeSpacing(
+      outer: LayoutEdgeSpacingSizes(
+        large: EdgeInsets.all(32),
+        medium: EdgeInsets.all(24),
+        small: EdgeInsets.all(16),
+      ),
+      inner: LayoutEdgeSpacingSizes(
+        large: EdgeInsets.all(24),
+        medium: EdgeInsets.all(16),
+      ),
+    ),
+    cornerRadii: LayoutCornerRadii(
+      large: 24,
+      medium: 16,
+      small: 8,
+    ),
+    actionSizes: LayoutActionSizes(
+      large: Size(240, 48),
+      medium: Size(120, 48),
+      small: Size(48, 48),
+    ),
+    heroSizes: LayoutHeroSizes(
+      large: Size(320, 320),
+      medium: Size(200, 200),
+      small: Size(80, 80),
+    ),
+  );
+}
+
+class Layout extends InheritedWidget {
+  const Layout({
+    required super.child,
+    this.data = LayoutData.standard,
+    super.key,
+  });
+
+  const Layout.custom({
+    required super.child,
+    required this.data,
+    super.key,
+  });
+
+  final LayoutData data;
+
+  // Convenience getters for backward compatibility
+  LayoutItemGaps get itemSpacing => data.itemSpacing;
+  LayoutEdgeSpacing get edgeSpacing => data.edgeSpacing;
+  LayoutCornerRadii get cornerRadii => data.cornerRadii;
+  LayoutHeroSizes get heroSizes => data.heroSizes;
+  double get modalBottomSheetHeightPercentage =>
+      data.modalBottomSheetHeightPercentage;
+  LayoutScreenSizes get screenSizes => data.screenSizes;
+  LayoutIconSizes get iconSizes => data.iconSizes;
+  LayoutActionSizes get actionSizes => data.actionSizes;
 
   static Layout? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<Layout>();
@@ -181,15 +272,7 @@ class Layout extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(Layout oldWidget) =>
-      itemSpacing != oldWidget.itemSpacing ||
-      edgeSpacing != oldWidget.edgeSpacing ||
-      iconSizes != oldWidget.iconSizes ||
-      actionSizes != oldWidget.actionSizes ||
-      cornerRadii != oldWidget.cornerRadii ||
-      heroSizes != oldWidget.heroSizes ||
-      modalBottomSheetHeightPercentage !=
-          oldWidget.modalBottomSheetHeightPercentage;
+  bool updateShouldNotify(Layout oldWidget) => data != oldWidget.data;
 
   List<Widget> insertSpaceBetween({
     required List<Widget> items,
@@ -418,77 +501,12 @@ class CompactLayout extends Layout {
   const CompactLayout({
     required super.child,
     super.key,
-  }) : super(
-          itemSpacing: const LayoutItemGaps(
-            large: 16,
-          ),
-          edgeSpacing: const LayoutEdgeSpacing(
-            outer: LayoutEdgeSpacingSizes(
-              large: EdgeInsets.all(16),
-            ),
-            inner: LayoutEdgeSpacingSizes(
-              large: EdgeInsets.all(12),
-              medium: EdgeInsets.all(8),
-              small: EdgeInsets.all(4),
-            ),
-          ),
-          cornerRadii: const LayoutCornerRadii(
-            large: 12,
-          ),
-          actionSizes: const LayoutActionSizes(
-            large: Size(180, 40),
-            medium: Size(90, 40),
-            small: Size(40, 40),
-          ),
-          heroSizes: const LayoutHeroSizes(
-            large: Size(200, 200),
-            medium: Size(120, 120),
-            small: Size(48, 48),
-          ),
-          iconSizes: const LayoutIconSizes(
-            
-          ),
-        );
+  }) : super(data: LayoutData.compact);
 }
 
 class SpaciousLayout extends Layout {
   const SpaciousLayout({
     required super.child,
     super.key,
-  }) : super(
-          itemSpacing: const LayoutItemGaps(
-            large: 32,
-            medium: 24,
-            small: 16,
-          ),
-          edgeSpacing: const LayoutEdgeSpacing(
-            outer: LayoutEdgeSpacingSizes(
-              large: EdgeInsets.all(32),
-              medium: EdgeInsets.all(24),
-              small: EdgeInsets.all(16),
-            ),
-            inner: LayoutEdgeSpacingSizes(
-              large: EdgeInsets.all(24),
-              medium: EdgeInsets.all(16),
-            ),
-          ),
-          cornerRadii: const LayoutCornerRadii(
-            large: 24,
-            medium: 16,
-            small: 8,
-          ),
-          actionSizes: const LayoutActionSizes(
-            large: Size(240, 48),
-            medium: Size(120, 48),
-            small: Size(48, 48),
-          ),
-          heroSizes: const LayoutHeroSizes(
-            large: Size(320, 320),
-            medium: Size(200, 200),
-            small: Size(80, 80),
-          ),
-          iconSizes: const LayoutIconSizes(
-            
-          ),
-        );
+  }) : super(data: LayoutData.spacious);
 }

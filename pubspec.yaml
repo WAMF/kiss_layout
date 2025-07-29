@@ -1,6 +1,6 @@
 name: kiss_layout
 description: "A simple system for standardizing layout in flutter"
-version: 1.0.1
+version: 1.1.0
 homepage: https://github.com/WAMF/kiss_layout
 
 environment:
@@ -13,9 +13,10 @@ dependencies:
   gap: ^3.0.1
 
 dev_dependencies:
+  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  very_good_analysis: ^9.0.0
 
 flutter:
 

@@ -88,6 +88,17 @@ class LayoutEdgeSpacing {
   }
 }
 
+class LayoutIconSizes {
+  const LayoutIconSizes({
+    this.large = const Size(24, 24),
+    this.medium = const Size(16, 16),
+    this.small = const Size(12, 12),
+  });
+  final Size large;
+  final Size medium;
+  final Size small;
+}
+
 class LayoutActionSizes {
   const LayoutActionSizes({
     this.large = const Size(200, 44),
@@ -145,6 +156,7 @@ class Layout extends InheritedWidget {
     this.actionSizes = const LayoutActionSizes(),
     this.cornerRadii = const LayoutCornerRadii(),
     this.heroSizes = const LayoutHeroSizes(),
+    this.iconSizes = const LayoutIconSizes(),
     this.modalBottomSheetHeightPercentage = 0.8,
     this.screenSizes = const LayoutScreenSizes(),
     super.key,
@@ -155,7 +167,7 @@ class Layout extends InheritedWidget {
   final LayoutHeroSizes heroSizes;
   final double modalBottomSheetHeightPercentage;
   final LayoutScreenSizes screenSizes;
-
+  final LayoutIconSizes iconSizes;
   final LayoutActionSizes actionSizes;
 
   static Layout? maybeOf(BuildContext context) {
@@ -172,6 +184,7 @@ class Layout extends InheritedWidget {
   bool updateShouldNotify(Layout oldWidget) =>
       itemSpacing != oldWidget.itemSpacing ||
       edgeSpacing != oldWidget.edgeSpacing ||
+      iconSizes != oldWidget.iconSizes ||
       actionSizes != oldWidget.actionSizes ||
       cornerRadii != oldWidget.cornerRadii ||
       heroSizes != oldWidget.heroSizes ||
@@ -227,6 +240,87 @@ class GapLarge extends StatelessWidget {
   Widget build(BuildContext context) {
     final layout = Layout.of(context);
     return Gap(layout.itemSpacing.large);
+  }
+}
+
+class IconSmall extends StatelessWidget {
+  const IconSmall(
+    this.icon, {
+    super.key,
+    this.color,
+    this.semanticLabel,
+    this.textDirection,
+  });
+
+  final IconData icon;
+  final Color? color;
+  final String? semanticLabel;
+  final TextDirection? textDirection;
+
+  @override
+  Widget build(BuildContext context) {
+    final layout = Layout.of(context);
+    return Icon(
+      icon,
+      size: layout.iconSizes.small.width,
+      color: color,
+      semanticLabel: semanticLabel,
+      textDirection: textDirection,
+    );
+  }
+}
+
+class IconMedium extends StatelessWidget {
+  const IconMedium(
+    this.icon, {
+    super.key,
+    this.color,
+    this.semanticLabel,
+    this.textDirection,
+  });
+
+  final IconData icon;
+  final Color? color;
+  final String? semanticLabel;
+  final TextDirection? textDirection;
+
+  @override
+  Widget build(BuildContext context) {
+    final layout = Layout.of(context);
+    return Icon(
+      icon,
+      size: layout.iconSizes.medium.width,
+      color: color,
+      semanticLabel: semanticLabel,
+      textDirection: textDirection,
+    );
+  }
+}
+
+class IconLarge extends StatelessWidget {
+  const IconLarge(
+    this.icon, {
+    super.key,
+    this.color,
+    this.semanticLabel,
+    this.textDirection,
+  });
+
+  final IconData icon;
+  final Color? color;
+  final String? semanticLabel;
+  final TextDirection? textDirection;
+
+  @override
+  Widget build(BuildContext context) {
+    final layout = Layout.of(context);
+    return Icon(
+      icon,
+      size: layout.iconSizes.large.width,
+      color: color,
+      semanticLabel: semanticLabel,
+      textDirection: textDirection,
+    );
   }
 }
 
@@ -326,15 +420,11 @@ class CompactLayout extends Layout {
     super.key,
   }) : super(
           itemSpacing: const LayoutItemGaps(
-            large: 16.0,
-            medium: 8.0,
-            small: 4.0,
+            large: 16,
           ),
           edgeSpacing: const LayoutEdgeSpacing(
             outer: LayoutEdgeSpacingSizes(
               large: EdgeInsets.all(16),
-              medium: EdgeInsets.all(12),
-              small: EdgeInsets.all(8),
             ),
             inner: LayoutEdgeSpacingSizes(
               large: EdgeInsets.all(12),
@@ -343,9 +433,7 @@ class CompactLayout extends Layout {
             ),
           ),
           cornerRadii: const LayoutCornerRadii(
-            large: 12.0,
-            medium: 8.0,
-            small: 4.0,
+            large: 12,
           ),
           actionSizes: const LayoutActionSizes(
             large: Size(180, 40),
@@ -357,6 +445,9 @@ class CompactLayout extends Layout {
             medium: Size(120, 120),
             small: Size(48, 48),
           ),
+          iconSizes: const LayoutIconSizes(
+            
+          ),
         );
 }
 
@@ -366,9 +457,9 @@ class SpaciousLayout extends Layout {
     super.key,
   }) : super(
           itemSpacing: const LayoutItemGaps(
-            large: 32.0,
-            medium: 24.0,
-            small: 16.0,
+            large: 32,
+            medium: 24,
+            small: 16,
           ),
           edgeSpacing: const LayoutEdgeSpacing(
             outer: LayoutEdgeSpacingSizes(
@@ -379,13 +470,12 @@ class SpaciousLayout extends Layout {
             inner: LayoutEdgeSpacingSizes(
               large: EdgeInsets.all(24),
               medium: EdgeInsets.all(16),
-              small: EdgeInsets.all(8),
             ),
           ),
           cornerRadii: const LayoutCornerRadii(
-            large: 24.0,
-            medium: 16.0,
-            small: 8.0,
+            large: 24,
+            medium: 16,
+            small: 8,
           ),
           actionSizes: const LayoutActionSizes(
             large: Size(240, 48),
@@ -396,6 +486,9 @@ class SpaciousLayout extends Layout {
             large: Size(320, 320),
             medium: Size(200, 200),
             small: Size(80, 80),
+          ),
+          iconSizes: const LayoutIconSizes(
+            
           ),
         );
 }

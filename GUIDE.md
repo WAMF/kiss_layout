@@ -5,28 +5,32 @@
 Kiss Layout is a Flutter-based design system that follows the KISS (Keep It Simple, Stupid) principle to create consistent user interfaces. The system uses a T-shirt sizing approach (Small, Medium, Large) for various design elements, making it intuitive and easy to maintain consistency across your application.
 
 ```
-┌──────────────────────── Layout System ────────────────────────┐
-│                                                              │
-│  ┌─ Spacing ──────────┐   ┌─ Components ───────────────────┐ │
-│  │                    │   │                                │ │
-│  │  Item Gaps:        │   │  Action Sizes:                │ │
-│  │  └─ L: 20dp       │   │  └─ L: 200×44dp               │ │
-│  │  └─ M: 8dp        │   │  └─ M: 100×44dp               │ │
-│  │  └─ S: 4dp        │   │  └─ S: 44×44dp                │ │
-│  │                    │   │                                │ │
-│  │  Edge Spacing:     │   │  Hero Sizes:                  │ │
-│  │  ├─ Outer         │   │  ├─ Fixed                     │ │
-│  │  │  └─ L: 20dp    │   │  │  └─ L: 256×256dp          │ │
-│  │  │  └─ M: 12dp    │   │  │  └─ M: 158×158dp          │ │
-│  │  │  └─ S: 8dp     │   │  │  └─ S: 64×64dp            │ │
-│  │  │                 │   │  │                            │ │
-│  │  └─ Inner         │   │  └─ Proportional              │ │
-│  │     └─ L: 20dp    │   │     └─ L: 40% container      │ │
-│  │     └─ M: 12dp    │   │     └─ M: 30% container      │ │
-│  │     └─ S: 8dp     │   │     └─ S: 10% container      │ │
-│  └────────────────────┘   └────────────────────────────────┘ │
-│                                                              │
-└──────────────────────────────────────────────────────────────┘
+Layout System Overview
+━━━━━━━━━━━━━━━━━━━━━
+
+SPACING                    COMPONENTS
+━━━━━━━                    ━━━━━━━━━━
+
+Item Gaps                  Action Sizes
+  L: 20dp                    L: 200×44dp
+  M: 8dp                     M: 100×44dp  
+  S: 4dp                     S: 44×44dp
+
+Edge Spacing               Icon Sizes
+  Outer:                     L: 24×24dp
+    L: 20dp                  M: 16×16dp
+    M: 12dp                  S: 12×12dp
+    S: 8dp
+                          Hero Sizes
+  Inner:                    Fixed:
+    L: 20dp                  L: 256×256dp
+    M: 12dp                  M: 158×158dp
+    S: 8dp                   S: 64×64dp
+                           
+                          Proportional:
+                            L: 40% of container
+                            M: 30% of container
+                            S: 10% of container
 ```
 
 ## Core Concepts
@@ -73,6 +77,11 @@ For responsive layouts:
 - Large: 200×44dp
 - Medium: 100×44dp
 - Small: 44×44dp
+
+#### Icon Sizes
+- Large: 24×24dp
+- Medium: 16×16dp
+- Small: 12×12dp
 
 #### Hero Elements
 Fixed sizes:

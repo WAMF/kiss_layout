@@ -18,7 +18,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  kiss_layout: ^1.0.0
+  kiss_layout: ^1.1.0
 ```
 
 ## Usage
@@ -67,6 +67,41 @@ PaddingOuterMedium(
       child: Text('Content'),
     ),
   ),
+)
+```
+
+### Icons
+
+Use the pre-built icon widgets for consistent iconography:
+
+```dart
+Row(
+  children: [
+    const IconLarge(Icons.star),      // 24dp
+    const GapMedium(),
+    const IconMedium(Icons.info),     // 16dp
+    const GapMedium(),
+    const IconSmall(Icons.close),     // 12dp
+  ],
+)
+```
+
+You can also customize the icon properties:
+
+```dart
+IconMedium(
+  Icons.favorite,
+  color: Colors.red,
+  semanticLabel: 'Favorite',
+)
+```
+
+Or use the layout directly for more control:
+
+```dart
+Icon(
+  Icons.custom,
+  size: Layout.of(context).iconSizes.large.width,
 )
 ```
 
@@ -121,7 +156,15 @@ class CustomCard extends StatelessWidget {
             height: layout.actionSizes.medium.height,
             child: ElevatedButton(
               onPressed: () {},
-              child: const Text('Action'),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Use icon widget shorthand
+                  const IconMedium(Icons.add),
+                  const Gap(8),
+                  const Text('Action'),
+                ],
+              ),
             ),
           ),
         ],
@@ -225,6 +268,7 @@ void main() {
 
 - Edge spacing (outer and inner)
 - Action sizes for buttons and interactive elements
+- Icon sizes for consistent iconography
 - Corner radii for consistent rounding
 - Hero sizes for featured elements
 - Modal bottom sheet configurations

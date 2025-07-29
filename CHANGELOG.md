@@ -1,3 +1,15 @@
+## 1.1.0
+
+### Added
+- `LayoutIconSizes` for standardized icon dimensions (24×24, 16×16, 12×12)
+- Pre-built icon widgets: `IconLarge`, `IconMedium`, and `IconSmall` for easy access to consistent icon sizes
+
+### Changed
+- Fixed all linter warnings by disabling `public_member_api_docs` rule
+- Applied dart fix to remove redundant argument values
+- Converted unnecessary double literals to integers
+- Sorted dependencies alphabetically in pubspec.yaml
+
 ## 1.0.0
 
 All notable changes to the Kiss Layout package will be documented in this file.

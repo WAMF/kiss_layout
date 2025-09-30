@@ -1,3 +1,8 @@
+## 1.3.1
+
+### Changed
+- Updated README with documentation for selective padding factory constructors
+
 ## 1.3.0
 
 ### Added

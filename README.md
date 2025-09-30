@@ -82,6 +82,30 @@ PaddingOuterMedium(
 )
 ```
 
+All padding widgets support selective padding through factory constructors:
+
+```dart
+// Apply padding only vertically (top and bottom)
+PaddingInnerMedium.onlyVertical(
+  child: Text('Content'),
+)
+
+// Apply padding only horizontally (left and right)
+PaddingInnerLarge.onlyHorizontal(
+  child: Text('Content'),
+)
+
+// Apply padding to specific sides
+PaddingOuterSmall.onlyBottom(child: Text('Content'))
+PaddingOuterSmall.onlyTop(child: Text('Content'))
+PaddingOuterSmall.onlyLeft(child: Text('Content'))
+PaddingOuterSmall.onlyRight(child: Text('Content'))
+
+// Combine horizontal with top or bottom
+PaddingInnerMedium.onlyHorizontalAndTop(child: Text('Content'))
+PaddingInnerMedium.onlyHorizontalAndBottom(child: Text('Content'))
+```
+
 ### Icons
 
 Use the pre-built icon widgets for consistent iconography:

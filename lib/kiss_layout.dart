@@ -409,55 +409,443 @@ class IconLarge extends StatelessWidget {
 
 // Base padding widget
 abstract class _BasePadding extends StatelessWidget {
-  const _BasePadding({required this.child, super.key});
+  const _BasePadding({
+    required this.child,
+    this.modifier,
+    super.key,
+  });
+
   final Widget child;
+  final EdgeInsets Function(EdgeInsets)? modifier;
 
   EdgeInsets getPadding(Layout layout);
 
   @override
   Widget build(BuildContext context) {
     final layout = Layout.of(context);
-    return Padding(padding: getPadding(layout), child: child);
+    final padding = getPadding(layout);
+    return Padding(
+      padding: modifier != null ? modifier!(padding) : padding,
+      child: child,
+    );
   }
 }
 
 class PaddingInnerSmall extends _BasePadding {
-  const PaddingInnerSmall({required super.child, super.key});
+  const PaddingInnerSmall({required super.child, super.key, super.modifier});
+
+  factory PaddingInnerSmall.onlyVertical({required Widget child, Key? key}) =>
+      PaddingInnerSmall(
+        key: key,
+        modifier: (padding) => padding.onlyVertical,
+        child: child,
+      );
+
+  factory PaddingInnerSmall.onlyHorizontal({required Widget child, Key? key}) =>
+      PaddingInnerSmall(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontal,
+        child: child,
+      );
+
+  factory PaddingInnerSmall.onlyBottom({required Widget child, Key? key}) =>
+      PaddingInnerSmall(
+        key: key,
+        modifier: (padding) => padding.onlyBottom,
+        child: child,
+      );
+
+  factory PaddingInnerSmall.onlyTop({required Widget child, Key? key}) =>
+      PaddingInnerSmall(
+        key: key,
+        modifier: (padding) => padding.onlyTop,
+        child: child,
+      );
+
+  factory PaddingInnerSmall.onlyLeft({required Widget child, Key? key}) =>
+      PaddingInnerSmall(
+        key: key,
+        modifier: (padding) => padding.onlyLeft,
+        child: child,
+      );
+
+  factory PaddingInnerSmall.onlyRight({required Widget child, Key? key}) =>
+      PaddingInnerSmall(
+        key: key,
+        modifier: (padding) => padding.onlyRight,
+        child: child,
+      );
+
+  factory PaddingInnerSmall.onlyHorizontalAndBottom({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingInnerSmall(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontalAndBottom,
+        child: child,
+      );
+
+  factory PaddingInnerSmall.onlyHorizontalAndTop({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingInnerSmall(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontalAndTop,
+        child: child,
+      );
 
   @override
   EdgeInsets getPadding(Layout layout) => layout.edgeSpacing.inner.small;
 }
 
 class PaddingInnerMedium extends _BasePadding {
-  const PaddingInnerMedium({required super.child, super.key});
+  const PaddingInnerMedium({required super.child, super.key, super.modifier});
+
+  factory PaddingInnerMedium.onlyVertical({required Widget child, Key? key}) =>
+      PaddingInnerMedium(
+        key: key,
+        modifier: (padding) => padding.onlyVertical,
+        child: child,
+      );
+
+  factory PaddingInnerMedium.onlyHorizontal({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingInnerMedium(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontal,
+        child: child,
+      );
+
+  factory PaddingInnerMedium.onlyBottom({required Widget child, Key? key}) =>
+      PaddingInnerMedium(
+        key: key,
+        modifier: (padding) => padding.onlyBottom,
+        child: child,
+      );
+
+  factory PaddingInnerMedium.onlyTop({required Widget child, Key? key}) =>
+      PaddingInnerMedium(
+        key: key,
+        modifier: (padding) => padding.onlyTop,
+        child: child,
+      );
+
+  factory PaddingInnerMedium.onlyLeft({required Widget child, Key? key}) =>
+      PaddingInnerMedium(
+        key: key,
+        modifier: (padding) => padding.onlyLeft,
+        child: child,
+      );
+
+  factory PaddingInnerMedium.onlyRight({required Widget child, Key? key}) =>
+      PaddingInnerMedium(
+        key: key,
+        modifier: (padding) => padding.onlyRight,
+        child: child,
+      );
+
+  factory PaddingInnerMedium.onlyHorizontalAndBottom({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingInnerMedium(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontalAndBottom,
+        child: child,
+      );
+
+  factory PaddingInnerMedium.onlyHorizontalAndTop({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingInnerMedium(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontalAndTop,
+        child: child,
+      );
 
   @override
   EdgeInsets getPadding(Layout layout) => layout.edgeSpacing.inner.medium;
 }
 
 class PaddingInnerLarge extends _BasePadding {
-  const PaddingInnerLarge({required super.child, super.key});
+  const PaddingInnerLarge({required super.child, super.key, super.modifier});
+
+  factory PaddingInnerLarge.onlyVertical({required Widget child, Key? key}) =>
+      PaddingInnerLarge(
+        key: key,
+        modifier: (padding) => padding.onlyVertical,
+        child: child,
+      );
+
+  factory PaddingInnerLarge.onlyHorizontal({required Widget child, Key? key}) =>
+      PaddingInnerLarge(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontal,
+        child: child,
+      );
+
+  factory PaddingInnerLarge.onlyBottom({required Widget child, Key? key}) =>
+      PaddingInnerLarge(
+        key: key,
+        modifier: (padding) => padding.onlyBottom,
+        child: child,
+      );
+
+  factory PaddingInnerLarge.onlyTop({required Widget child, Key? key}) =>
+      PaddingInnerLarge(
+        key: key,
+        modifier: (padding) => padding.onlyTop,
+        child: child,
+      );
+
+  factory PaddingInnerLarge.onlyLeft({required Widget child, Key? key}) =>
+      PaddingInnerLarge(
+        key: key,
+        modifier: (padding) => padding.onlyLeft,
+        child: child,
+      );
+
+  factory PaddingInnerLarge.onlyRight({required Widget child, Key? key}) =>
+      PaddingInnerLarge(
+        key: key,
+        modifier: (padding) => padding.onlyRight,
+        child: child,
+      );
+
+  factory PaddingInnerLarge.onlyHorizontalAndBottom({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingInnerLarge(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontalAndBottom,
+        child: child,
+      );
+
+  factory PaddingInnerLarge.onlyHorizontalAndTop({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingInnerLarge(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontalAndTop,
+        child: child,
+      );
 
   @override
   EdgeInsets getPadding(Layout layout) => layout.edgeSpacing.inner.large;
 }
 
 class PaddingOuterSmall extends _BasePadding {
-  const PaddingOuterSmall({required super.child, super.key});
+  const PaddingOuterSmall({required super.child, super.key, super.modifier});
+
+  factory PaddingOuterSmall.onlyVertical({required Widget child, Key? key}) =>
+      PaddingOuterSmall(
+        key: key,
+        modifier: (padding) => padding.onlyVertical,
+        child: child,
+      );
+
+  factory PaddingOuterSmall.onlyHorizontal({required Widget child, Key? key}) =>
+      PaddingOuterSmall(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontal,
+        child: child,
+      );
+
+  factory PaddingOuterSmall.onlyBottom({required Widget child, Key? key}) =>
+      PaddingOuterSmall(
+        key: key,
+        modifier: (padding) => padding.onlyBottom,
+        child: child,
+      );
+
+  factory PaddingOuterSmall.onlyTop({required Widget child, Key? key}) =>
+      PaddingOuterSmall(
+        key: key,
+        modifier: (padding) => padding.onlyTop,
+        child: child,
+      );
+
+  factory PaddingOuterSmall.onlyLeft({required Widget child, Key? key}) =>
+      PaddingOuterSmall(
+        key: key,
+        modifier: (padding) => padding.onlyLeft,
+        child: child,
+      );
+
+  factory PaddingOuterSmall.onlyRight({required Widget child, Key? key}) =>
+      PaddingOuterSmall(
+        key: key,
+        modifier: (padding) => padding.onlyRight,
+        child: child,
+      );
+
+  factory PaddingOuterSmall.onlyHorizontalAndBottom({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingOuterSmall(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontalAndBottom,
+        child: child,
+      );
+
+  factory PaddingOuterSmall.onlyHorizontalAndTop({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingOuterSmall(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontalAndTop,
+        child: child,
+      );
 
   @override
   EdgeInsets getPadding(Layout layout) => layout.edgeSpacing.outer.small;
 }
 
 class PaddingOuterMedium extends _BasePadding {
-  const PaddingOuterMedium({required super.child, super.key});
+  const PaddingOuterMedium({required super.child, super.key, super.modifier});
+
+  factory PaddingOuterMedium.onlyVertical({required Widget child, Key? key}) =>
+      PaddingOuterMedium(
+        key: key,
+        modifier: (padding) => padding.onlyVertical,
+        child: child,
+      );
+
+  factory PaddingOuterMedium.onlyHorizontal({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingOuterMedium(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontal,
+        child: child,
+      );
+
+  factory PaddingOuterMedium.onlyBottom({required Widget child, Key? key}) =>
+      PaddingOuterMedium(
+        key: key,
+        modifier: (padding) => padding.onlyBottom,
+        child: child,
+      );
+
+  factory PaddingOuterMedium.onlyTop({required Widget child, Key? key}) =>
+      PaddingOuterMedium(
+        key: key,
+        modifier: (padding) => padding.onlyTop,
+        child: child,
+      );
+
+  factory PaddingOuterMedium.onlyLeft({required Widget child, Key? key}) =>
+      PaddingOuterMedium(
+        key: key,
+        modifier: (padding) => padding.onlyLeft,
+        child: child,
+      );
+
+  factory PaddingOuterMedium.onlyRight({required Widget child, Key? key}) =>
+      PaddingOuterMedium(
+        key: key,
+        modifier: (padding) => padding.onlyRight,
+        child: child,
+      );
+
+  factory PaddingOuterMedium.onlyHorizontalAndBottom({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingOuterMedium(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontalAndBottom,
+        child: child,
+      );
+
+  factory PaddingOuterMedium.onlyHorizontalAndTop({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingOuterMedium(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontalAndTop,
+        child: child,
+      );
 
   @override
   EdgeInsets getPadding(Layout layout) => layout.edgeSpacing.outer.medium;
 }
 
 class PaddingOuterLarge extends _BasePadding {
-  const PaddingOuterLarge({required super.child, super.key});
+  const PaddingOuterLarge({required super.child, super.key, super.modifier});
+
+  factory PaddingOuterLarge.onlyVertical({required Widget child, Key? key}) =>
+      PaddingOuterLarge(
+        key: key,
+        modifier: (padding) => padding.onlyVertical,
+        child: child,
+      );
+
+  factory PaddingOuterLarge.onlyHorizontal({required Widget child, Key? key}) =>
+      PaddingOuterLarge(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontal,
+        child: child,
+      );
+
+  factory PaddingOuterLarge.onlyBottom({required Widget child, Key? key}) =>
+      PaddingOuterLarge(
+        key: key,
+        modifier: (padding) => padding.onlyBottom,
+        child: child,
+      );
+
+  factory PaddingOuterLarge.onlyTop({required Widget child, Key? key}) =>
+      PaddingOuterLarge(
+        key: key,
+        modifier: (padding) => padding.onlyTop,
+        child: child,
+      );
+
+  factory PaddingOuterLarge.onlyLeft({required Widget child, Key? key}) =>
+      PaddingOuterLarge(
+        key: key,
+        modifier: (padding) => padding.onlyLeft,
+        child: child,
+      );
+
+  factory PaddingOuterLarge.onlyRight({required Widget child, Key? key}) =>
+      PaddingOuterLarge(
+        key: key,
+        modifier: (padding) => padding.onlyRight,
+        child: child,
+      );
+
+  factory PaddingOuterLarge.onlyHorizontalAndBottom({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingOuterLarge(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontalAndBottom,
+        child: child,
+      );
+
+  factory PaddingOuterLarge.onlyHorizontalAndTop({
+    required Widget child,
+    Key? key,
+  }) =>
+      PaddingOuterLarge(
+        key: key,
+        modifier: (padding) => padding.onlyHorizontalAndTop,
+        child: child,
+      );
 
   @override
   EdgeInsets getPadding(Layout layout) => layout.edgeSpacing.outer.large;

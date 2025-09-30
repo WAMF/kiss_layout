@@ -1,3 +1,17 @@
+## 1.3.0
+
+### Added
+- Convenience factory constructors for all padding widgets to enable selective padding application:
+  - `onlyVertical` - applies padding only to top and bottom
+  - `onlyHorizontal` - applies padding only to left and right
+  - `onlyBottom` - applies padding only to bottom
+  - `onlyTop` - applies padding only to top
+  - `onlyLeft` - applies padding only to left
+  - `onlyRight` - applies padding only to right
+  - `onlyHorizontalAndBottom` - applies padding to left, right, and bottom
+  - `onlyHorizontalAndTop` - applies padding to left, right, and top
+- Available for all padding widgets: `PaddingInnerSmall`, `PaddingInnerMedium`, `PaddingInnerLarge`, `PaddingOuterSmall`, `PaddingOuterMedium`, `PaddingOuterLarge`
+
 ## 1.2.0
 
 - **BREAKING**: Refactored Layout widget to use a single `LayoutData` parameter instead of individual properties

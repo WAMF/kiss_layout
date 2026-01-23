@@ -1,3 +1,44 @@
+## 2.0.0
+
+### Breaking Changes
+- **BREAKING**: Renamed `LayoutScreenSizes` to `LayoutScreenBreakpoints`
+- **BREAKING**: Removed `minLanscapeTableWidth` property (had typo in name)
+- **BREAKING**: Changed to T-shirt size naming with two breakpoints:
+  - `mediumStartPoint` (default: 600) - where medium screens start
+  - `largeStartPoint` (default: 960) - where large screens start
+
+### Added
+- Opinionated breakpoint system with three screen sizes:
+  - **Small**: width < 600
+  - **Medium**: 600 ≤ width < 960
+  - **Large**: width ≥ 960
+
+### Migration Guide
+Replace `LayoutScreenSizes` with `LayoutScreenBreakpoints`:
+
+```dart
+// Before
+screenSizes: LayoutScreenSizes(minLanscapeTableWidth: 800)
+
+// After
+screenSizes: LayoutScreenBreakpoints(
+  mediumStartPoint: 600,
+  largeStartPoint: 960,
+)
+```
+
+Access breakpoints using the new property names:
+```dart
+final breakpoints = Layout.of(context).screenSizes;
+if (width < breakpoints.mediumStartPoint) {
+  // Small screen
+} else if (width < breakpoints.largeStartPoint) {
+  // Medium screen
+} else {
+  // Large screen
+}
+```
+
 ## 1.3.1
 
 ### Changed

@@ -141,11 +141,17 @@ class LayoutHeroSizes {
   final Size smallProportionate;
 }
 
-class LayoutScreenSizes {
-  const LayoutScreenSizes({
-    this.minLanscapeTableWidth = 800,
+class LayoutScreenBreakpoints {
+  const LayoutScreenBreakpoints({
+    this.mediumStartPoint = 600,
+    this.largeStartPoint = 960,
   });
-  final double minLanscapeTableWidth;
+
+  /// Breakpoint where medium screens start (width >= mediumStartPoint)
+  final double mediumStartPoint;
+
+  /// Breakpoint where large screens start (width >= largeStartPoint)
+  final double largeStartPoint;
 }
 
 class LayoutData {
@@ -157,7 +163,7 @@ class LayoutData {
     this.heroSizes = const LayoutHeroSizes(),
     this.iconSizes = const LayoutIconSizes(),
     this.modalBottomSheetHeightPercentage = 0.8,
-    this.screenSizes = const LayoutScreenSizes(),
+    this.screenSizes = const LayoutScreenBreakpoints(),
   });
 
   final LayoutItemGaps itemSpacing;
@@ -165,7 +171,7 @@ class LayoutData {
   final LayoutCornerRadii cornerRadii;
   final LayoutHeroSizes heroSizes;
   final double modalBottomSheetHeightPercentage;
-  final LayoutScreenSizes screenSizes;
+  final LayoutScreenBreakpoints screenSizes;
   final LayoutIconSizes iconSizes;
   final LayoutActionSizes actionSizes;
 
@@ -257,7 +263,7 @@ class Layout extends InheritedWidget {
   LayoutHeroSizes get heroSizes => data.heroSizes;
   double get modalBottomSheetHeightPercentage =>
       data.modalBottomSheetHeightPercentage;
-  LayoutScreenSizes get screenSizes => data.screenSizes;
+  LayoutScreenBreakpoints get screenSizes => data.screenSizes;
   LayoutIconSizes get iconSizes => data.iconSizes;
   LayoutActionSizes get actionSizes => data.actionSizes;
 

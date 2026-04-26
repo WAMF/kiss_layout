@@ -141,17 +141,11 @@ class LayoutHeroSizes {
   final Size smallProportionate;
 }
 
-class LayoutScreenBreakpoints {
-  const LayoutScreenBreakpoints({
-    this.medium = 600,
-    this.large = 960,
-  });
+class LayoutBreakpoint {
+  const LayoutBreakpoint({required this.minWidth, required this.data});
 
-  /// Breakpoint where medium screens start (width >= medium)
-  final double medium;
-
-  /// Breakpoint where large screens start (width >= large)
-  final double large;
+  final double minWidth;
+  final LayoutData data;
 }
 
 class LayoutData {
@@ -239,45 +233,29 @@ class LayoutData {
   );
 }
 
-class Layout extends InheritedWidget {
+class Layout extends StatelessWidget {
   const Layout({
-    required super.child,
+    required this.child,
     this.data = LayoutData.standard,
+    this.breakpoints = const <LayoutBreakpoint>[],
     super.key,
   });
 
-  const Layout.custom({
-    required super.child,
-    required this.data,
-    super.key,
-  });
-
+  final Widget child;
   final LayoutData data;
+  final List<LayoutBreakpoint> breakpoints;
 
-  // Convenience getters for backward compatibility
-  LayoutItemGaps get itemSpacing => data.itemSpacing;
-  LayoutEdgeSpacing get edgeSpacing => data.edgeSpacing;
-  LayoutCornerRadii get cornerRadii => data.cornerRadii;
-  LayoutHeroSizes get heroSizes => data.heroSizes;
-  double get modalBottomSheetHeightPercentage =>
-      data.modalBottomSheetHeightPercentage;
-  LayoutIconSizes get iconSizes => data.iconSizes;
-  LayoutActionSizes get actionSizes => data.actionSizes;
-
-  static Layout? maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<Layout>();
+  static LayoutData? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<_LayoutScope>()?.data;
   }
 
-  static Layout of(BuildContext context) {
+  static LayoutData of(BuildContext context) {
     final result = maybeOf(context);
     assert(result != null, 'No Layout found in context');
     return result!;
   }
 
-  @override
-  bool updateShouldNotify(Layout oldWidget) => data != oldWidget.data;
-
-  List<Widget> insertSpaceBetween({
+  static List<Widget> insertSpaceBetween({
     required List<Widget> items,
     LayoutSizes size = LayoutSizes.medium,
   }) {
@@ -297,6 +275,44 @@ class Layout extends InheritedWidget {
     }
     return result;
   }
+
+  @override
+  Widget build(BuildContext context) {
+    assert(
+      () {
+        for (var i = 1; i < breakpoints.length; i++) {
+          if (breakpoints[i].minWidth <= breakpoints[i - 1].minWidth) {
+            return false;
+          }
+        }
+        return true;
+      }(),
+      'Layout.breakpoints must be sorted ascending by minWidth',
+    );
+
+    if (breakpoints.isEmpty) {
+      return _LayoutScope(data: data, child: child);
+    }
+    final width = MediaQuery.sizeOf(context).width;
+    var resolved = data;
+    for (final bp in breakpoints) {
+      if (width >= bp.minWidth) {
+        resolved = bp.data;
+      } else {
+        break;
+      }
+    }
+    return _LayoutScope(data: resolved, child: child);
+  }
+}
+
+class _LayoutScope extends InheritedWidget {
+  const _LayoutScope({required this.data, required super.child});
+
+  final LayoutData data;
+
+  @override
+  bool updateShouldNotify(_LayoutScope oldWidget) => data != oldWidget.data;
 }
 
 class GapSmall extends StatelessWidget {
@@ -421,12 +437,12 @@ abstract class _BasePadding extends StatelessWidget {
   final Widget child;
   final EdgeInsets Function(EdgeInsets)? modifier;
 
-  EdgeInsets getPadding(Layout layout);
+  EdgeInsets getPadding(LayoutData data);
 
   @override
   Widget build(BuildContext context) {
-    final layout = Layout.of(context);
-    final padding = getPadding(layout);
+    final data = Layout.of(context);
+    final padding = getPadding(data);
     return Padding(
       padding: modifier != null ? modifier!(padding) : padding,
       child: child,
@@ -500,7 +516,7 @@ class PaddingInnerSmall extends _BasePadding {
       );
 
   @override
-  EdgeInsets getPadding(Layout layout) => layout.edgeSpacing.inner.small;
+  EdgeInsets getPadding(LayoutData data) => data.edgeSpacing.inner.small;
 }
 
 class PaddingInnerMedium extends _BasePadding {
@@ -572,7 +588,7 @@ class PaddingInnerMedium extends _BasePadding {
       );
 
   @override
-  EdgeInsets getPadding(Layout layout) => layout.edgeSpacing.inner.medium;
+  EdgeInsets getPadding(LayoutData data) => data.edgeSpacing.inner.medium;
 }
 
 class PaddingInnerLarge extends _BasePadding {
@@ -641,7 +657,7 @@ class PaddingInnerLarge extends _BasePadding {
       );
 
   @override
-  EdgeInsets getPadding(Layout layout) => layout.edgeSpacing.inner.large;
+  EdgeInsets getPadding(LayoutData data) => data.edgeSpacing.inner.large;
 }
 
 class PaddingOuterSmall extends _BasePadding {
@@ -710,7 +726,7 @@ class PaddingOuterSmall extends _BasePadding {
       );
 
   @override
-  EdgeInsets getPadding(Layout layout) => layout.edgeSpacing.outer.small;
+  EdgeInsets getPadding(LayoutData data) => data.edgeSpacing.outer.small;
 }
 
 class PaddingOuterMedium extends _BasePadding {
@@ -782,7 +798,7 @@ class PaddingOuterMedium extends _BasePadding {
       );
 
   @override
-  EdgeInsets getPadding(Layout layout) => layout.edgeSpacing.outer.medium;
+  EdgeInsets getPadding(LayoutData data) => data.edgeSpacing.outer.medium;
 }
 
 class PaddingOuterLarge extends _BasePadding {
@@ -851,7 +867,7 @@ class PaddingOuterLarge extends _BasePadding {
       );
 
   @override
-  EdgeInsets getPadding(Layout layout) => layout.edgeSpacing.outer.large;
+  EdgeInsets getPadding(LayoutData data) => data.edgeSpacing.outer.large;
 }
 
 extension EdgeInsetsConvienience on EdgeInsets {
@@ -900,35 +916,4 @@ class SpaciousLayout extends Layout {
     required super.child,
     super.key,
   }) : super(data: LayoutData.spacious);
-}
-
-class ResponsiveLayout extends StatelessWidget {
-  const ResponsiveLayout({
-    required this.child,
-    required this.small,
-    required this.medium,
-    required this.large,
-    this.breakpoints = const LayoutScreenBreakpoints(),
-    super.key,
-  });
-
-  final Widget child;
-  final LayoutData small;
-  final LayoutData medium;
-  final LayoutData large;
-  final LayoutScreenBreakpoints breakpoints;
-
-  @override
-  Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
-    final LayoutData data;
-    if (width >= breakpoints.large) {
-      data = large;
-    } else if (width >= breakpoints.medium) {
-      data = medium;
-    } else {
-      data = small;
-    }
-    return Layout.custom(data: data, child: child);
-  }
 }

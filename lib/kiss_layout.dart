@@ -143,15 +143,15 @@ class LayoutHeroSizes {
 
 class LayoutScreenBreakpoints {
   const LayoutScreenBreakpoints({
-    this.mediumStartPoint = 600,
-    this.largeStartPoint = 960,
+    this.medium = 600,
+    this.large = 960,
   });
 
-  /// Breakpoint where medium screens start (width >= mediumStartPoint)
-  final double mediumStartPoint;
+  /// Breakpoint where medium screens start (width >= medium)
+  final double medium;
 
-  /// Breakpoint where large screens start (width >= largeStartPoint)
-  final double largeStartPoint;
+  /// Breakpoint where large screens start (width >= large)
+  final double large;
 }
 
 class LayoutData {
@@ -163,7 +163,6 @@ class LayoutData {
     this.heroSizes = const LayoutHeroSizes(),
     this.iconSizes = const LayoutIconSizes(),
     this.modalBottomSheetHeightPercentage = 0.8,
-    this.screenSizes = const LayoutScreenBreakpoints(),
   });
 
   final LayoutItemGaps itemSpacing;
@@ -171,7 +170,6 @@ class LayoutData {
   final LayoutCornerRadii cornerRadii;
   final LayoutHeroSizes heroSizes;
   final double modalBottomSheetHeightPercentage;
-  final LayoutScreenBreakpoints screenSizes;
   final LayoutIconSizes iconSizes;
   final LayoutActionSizes actionSizes;
 
@@ -263,7 +261,6 @@ class Layout extends InheritedWidget {
   LayoutHeroSizes get heroSizes => data.heroSizes;
   double get modalBottomSheetHeightPercentage =>
       data.modalBottomSheetHeightPercentage;
-  LayoutScreenBreakpoints get screenSizes => data.screenSizes;
   LayoutIconSizes get iconSizes => data.iconSizes;
   LayoutActionSizes get actionSizes => data.actionSizes;
 
@@ -903,4 +900,35 @@ class SpaciousLayout extends Layout {
     required super.child,
     super.key,
   }) : super(data: LayoutData.spacious);
+}
+
+class ResponsiveLayout extends StatelessWidget {
+  const ResponsiveLayout({
+    required this.child,
+    required this.small,
+    required this.medium,
+    required this.large,
+    this.breakpoints = const LayoutScreenBreakpoints(),
+    super.key,
+  });
+
+  final Widget child;
+  final LayoutData small;
+  final LayoutData medium;
+  final LayoutData large;
+  final LayoutScreenBreakpoints breakpoints;
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final LayoutData data;
+    if (width >= breakpoints.large) {
+      data = large;
+    } else if (width >= breakpoints.medium) {
+      data = medium;
+    } else {
+      data = small;
+    }
+    return Layout.custom(data: data, child: child);
+  }
 }

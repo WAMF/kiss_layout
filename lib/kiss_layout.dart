@@ -278,17 +278,22 @@ class Layout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isSortedAscending(List<LayoutBreakpoint> points) {
+      for (var i = 1; i < points.length; i++) {
+        if (points[i].minWidth <= points[i - 1].minWidth) return false;
+      }
+      return true;
+    }
+
     assert(
-      () {
-        for (var i = 1; i < breakpoints.length; i++) {
-          if (breakpoints[i].minWidth <= breakpoints[i - 1].minWidth) {
-            return false;
-          }
-        }
-        return true;
-      }(),
+      isSortedAscending(breakpoints),
       'Layout.breakpoints must be sorted ascending by minWidth',
     );
+    if (!isSortedAscending(breakpoints)) {
+      throw FlutterError(
+        'Layout.breakpoints must be sorted ascending by minWidth.',
+      );
+    }
 
     if (breakpoints.isEmpty) {
       return _LayoutScope(data: data, child: child);

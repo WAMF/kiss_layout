@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kiss_layout/kiss_layout.dart';
 
@@ -128,6 +127,30 @@ void main() {
         ),
       );
       expect(captured, equals(LayoutData.standard));
+    });
+
+    testWidgets('selects upper breakpoint exactly at its minWidth',
+        (tester) async {
+      LayoutData? captured;
+      await tester.pumpWidget(
+        buildTestApp(
+          width: 960,
+          child: Layout(
+            data: LayoutData.compact,
+            breakpoints: const [
+              LayoutBreakpoint(minWidth: 600, data: LayoutData.standard),
+              LayoutBreakpoint(minWidth: 960, data: LayoutData.spacious),
+            ],
+            child: Builder(
+              builder: (context) {
+                captured = Layout.of(context);
+                return const SizedBox();
+              },
+            ),
+          ),
+        ),
+      );
+      expect(captured, equals(LayoutData.spacious));
     });
 
     testWidgets('consumers do not rebuild on resize within same breakpoint',

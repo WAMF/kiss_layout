@@ -1,3 +1,45 @@
+## 3.0.0
+
+### Breaking Changes
+- **BREAKING**: `Layout` is now a `StatelessWidget` (previously `InheritedWidget`). Internal scope is provided via a private `InheritedWidget`.
+- **BREAKING**: `Layout.of(context)` now returns `LayoutData` (previously returned `Layout`). Access fields directly: `Layout.of(context).itemSpacing` instead of `Layout.of(context).itemSpacing` via convenience getter.
+- **BREAKING**: Removed convenience getters on `Layout` (`itemSpacing`, `edgeSpacing`, `cornerRadii`, `heroSizes`, `iconSizes`, `actionSizes`, `screenSizes`, `modalBottomSheetHeightPercentage`). Use the returned `LayoutData` directly.
+- **BREAKING**: Removed `Layout.custom` constructor. Pass `data:` to the default constructor instead.
+- **BREAKING**: `insertSpaceBetween` is now a `static` method on `Layout`.
+- **BREAKING**: Removed `LayoutScreenBreakpoints` class and `LayoutData.screenSizes` field. Replaced by a flexible `breakpoints` list on `Layout` using `LayoutBreakpoint(minWidth, data)`.
+
+### Added
+- Responsive `Layout` via optional `breakpoints` parameter — supply a list of `LayoutBreakpoint` entries and the active `LayoutData` is selected at lookup time based on the current screen width.
+- Runtime assertion that `breakpoints` are sorted by ascending `minWidth`.
+
+### Migration Guide
+```dart
+// Before
+Layout(
+  data: LayoutData.standard.copyWith(
+    screenSizes: const LayoutScreenBreakpoints(
+      mediumStartPoint: 600,
+      largeStartPoint: 960,
+    ),
+  ),
+  child: child,
+);
+final layout = Layout.of(context);
+final spacing = layout.itemSpacing;
+
+// After
+Layout(
+  data: LayoutData.standard,
+  breakpoints: const [
+    LayoutBreakpoint(minWidth: 600, data: LayoutData.standard),
+    LayoutBreakpoint(minWidth: 960, data: LayoutData.large),
+  ],
+  child: child,
+);
+final data = Layout.of(context);
+final spacing = data.itemSpacing;
+```
+
 ## 2.0.0
 
 ### Breaking Changes

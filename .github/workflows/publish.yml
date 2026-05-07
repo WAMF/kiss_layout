@@ -20,16 +20,29 @@ jobs:
           set -euo pipefail
           NAME=$(awk '/^name:/ {print $2}' pubspec.yaml | tr -d '"' | tr -d "'")
           VERSION=$(awk '/^version:/ {print $2}' pubspec.yaml | tr -d '"' | tr -d "'")
+          if [ -z "${NAME:-}" ] || [ -z "${VERSION:-}" ]; then
+            echo "Failed to parse package name/version from pubspec.yaml" >&2
+            exit 1
+          fi
           echo "Package: $NAME @ $VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          status=$(curl -s -o /dev/null -w "%{http_code}" "https://pub.dev/api/packages/$NAME/versions/$VERSION")
-          if [ "$status" = "200" ]; then
-            echo "Version $VERSION already on pub.dev — skipping publish."
-            echo "should_publish=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "Version $VERSION not on pub.dev — will publish."
-            echo "should_publish=true" >> "$GITHUB_OUTPUT"
-          fi
+          status=$(curl -sS -o /dev/null -w "%{http_code}" \
+            --retry 3 --retry-all-errors --connect-timeout 10 --max-time 30 \
+            "https://pub.dev/api/packages/$NAME/versions/$VERSION")
+          case "$status" in
+            200)
+              echo "Version $VERSION already on pub.dev — skipping publish."
+              echo "should_publish=false" >> "$GITHUB_OUTPUT"
+              ;;
+            404)
+              echo "Version $VERSION not on pub.dev — will publish."
+              echo "should_publish=true" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "Unexpected pub.dev response status: $status" >&2
+              exit 1
+              ;;
+          esac
 
   publish:
     name: Publish ${{ needs.check.outputs.version }}
@@ -37,4 +50,4 @@ jobs:
     if: needs.check.outputs.should_publish == 'true'
     permissions:
       id-token: write
-    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@65eb853c7ba17dde3be364c3d2858773e7144260 # v1.7.2

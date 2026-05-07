@@ -1,0 +1,40 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - pubspec.yaml
+
+jobs:
+  check:
+    name: Check version
+    runs-on: ubuntu-latest
+    outputs:
+      should_publish: ${{ steps.check.outputs.should_publish }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: check
+        run: |
+          set -euo pipefail
+          NAME=$(awk '/^name:/ {print $2}' pubspec.yaml | tr -d '"' | tr -d "'")
+          VERSION=$(awk '/^version:/ {print $2}' pubspec.yaml | tr -d '"' | tr -d "'")
+          echo "Package: $NAME @ $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          status=$(curl -s -o /dev/null -w "%{http_code}" "https://pub.dev/api/packages/$NAME/versions/$VERSION")
+          if [ "$status" = "200" ]; then
+            echo "Version $VERSION already on pub.dev — skipping publish."
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Version $VERSION not on pub.dev — will publish."
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  publish:
+    name: Publish ${{ needs.check.outputs.version }}
+    needs: check
+    if: needs.check.outputs.should_publish == 'true'
+    permissions:
+      id-token: write
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1

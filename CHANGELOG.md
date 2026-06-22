@@ -1,44 +1,43 @@
 ## 3.0.0
 
 ### Breaking Changes
-- **BREAKING**: `Layout` is now a `StatelessWidget` (previously `InheritedWidget`). Internal scope is provided via a private `InheritedWidget`.
-- **BREAKING**: `Layout.of(context)` now returns `LayoutData` (previously returned `Layout`). Access fields directly: `Layout.of(context).itemSpacing` instead of `Layout.of(context).itemSpacing` via convenience getter.
-- **BREAKING**: Removed convenience getters on `Layout` (`itemSpacing`, `edgeSpacing`, `cornerRadii`, `heroSizes`, `iconSizes`, `actionSizes`, `screenSizes`, `modalBottomSheetHeightPercentage`). Use the returned `LayoutData` directly.
-- **BREAKING**: Removed `Layout.custom` constructor. Pass `data:` to the default constructor instead.
-- **BREAKING**: `insertSpaceBetween` is now a `static` method on `Layout`.
-- **BREAKING**: Removed `LayoutScreenBreakpoints` class and `LayoutData.screenSizes` field. Replaced by a flexible `breakpoints` list on `Layout` using `LayoutBreakpoint(minWidth, data)`.
+- **BREAKING**: `Layout` is now a `StatelessWidget` (was `InheritedWidget`). The InheritedWidget pattern is preserved internally as a private `_LayoutScope`. `Layout.of(context)` continues to be the supported entry point and now returns `LayoutData` (was `Layout`). Field-access expressions (`Layout.of(context).itemSpacing.small`, etc.) keep working unchanged because `LayoutData`'s field names mirror the previous convenience getters. Code that bound `Layout.of` to a typed variable (`final Layout layout = ...`) or wrote functions taking `Layout` parameters needs `Layout` → `LayoutData`.
+- **BREAKING**: Removed `LayoutScreenBreakpoints` and the `screenSizes` field on `LayoutData`. Consumers now own their breakpoints by passing a `breakpoints: <LayoutBreakpoint>[…]` list to `Layout`.
+- **BREAKING**: Removed `Layout.custom(...)` — use the regular `Layout(data: …)` constructor.
+- **BREAKING**: `Layout.insertSpaceBetween` is now a `static` method (was an instance method).
 
 ### Added
-- Responsive `Layout` via optional `breakpoints` parameter — supply a list of `LayoutBreakpoint` entries and the active `LayoutData` is selected at lookup time based on the current screen width.
-- Runtime assertion that `breakpoints` are sorted by ascending `minWidth`.
+- `Layout` accepts an optional `breakpoints: List<LayoutBreakpoint>` argument for responsive layout resolution. `LayoutBreakpoint(minWidth: …, data: …)` swaps in a different `LayoutData` at or above the threshold; the list must be sorted ascending by `minWidth`.
+- Sorting is enforced both via `assert` (debug) and `throw FlutterError(...)` (release/profile) so mis-sorted lists are caught in every build mode.
+- Internal split: public `Layout` is a `StatelessWidget` that resolves the current breakpoint from `MediaQuery.sizeOf(context).width` and emits a private `_LayoutScope` `InheritedWidget`. Consumers reading via `Layout.of(context)` only rebuild when the resolved `LayoutData` actually changes (not on every pixel of resize).
 
 ### Migration Guide
+
 ```dart
 // Before
 Layout(
-  data: LayoutData.standard.copyWith(
-    screenSizes: const LayoutScreenBreakpoints(
-      mediumStartPoint: 600,
-      largeStartPoint: 960,
-    ),
-  ),
-  child: child,
-);
-final layout = Layout.of(context);
-final spacing = layout.itemSpacing;
+  data: LayoutData.standard,
+  child: ...,
+)
 
-// After
+// After (non-responsive — unchanged)
 Layout(
   data: LayoutData.standard,
+  child: ...,
+)
+
+// After (responsive — new)
+Layout(
+  data: LayoutData.compact,
   breakpoints: const [
     LayoutBreakpoint(minWidth: 600, data: LayoutData.standard),
-    LayoutBreakpoint(minWidth: 960, data: LayoutData.large),
+    LayoutBreakpoint(minWidth: 960, data: LayoutData.spacious),
   ],
-  child: child,
-);
-final data = Layout.of(context);
-final spacing = data.itemSpacing;
+  child: ...,
+)
 ```
+
+If you used `LayoutData.screenSizes.mediumStartPoint` (or similar), define your own breakpoint constants at the app level and pass them to `Layout(breakpoints: …)`.
 
 ## 2.0.0
 
